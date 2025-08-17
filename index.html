@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatPersonas - IA Conversacional</title>
+
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <div class="logo" onclick="showPage('characters')">
+                💬 ChatPersonas
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-item active" onclick="showPage('characters')">Personagens</a>
+                <a href="#" class="nav-item">Descobrir</a>
+                <a href="#" class="nav-item">Favoritos</a>
+                <a href="#" class="nav-item">Histórico</a>
+                <a href="criar.html" class="nav-item">Criar</a>
+                <a href="perfil.html" class="nav-item">Perfil</a>
+            </div>
+        </div>
+        <div class="navbar-right">
+            <select id="globalModelSelector" class="model-selector">
+                <option value="gpt-4">GPT-4</option>
+                <option value="claude-3.5">Claude 3.5</option>
+                <option value="gemini-pro">Gemini Pro</option>
+                <option value="local">Local Model</option>
+                <option value="demo" selected>Demo</option>
+            </select>
+            <div class="user-avatar" onclick="showModal('settings')">
+                ⚙️
+            </div>
+        </div>
+    </nav>
+
+    <!-- BOTÃO TOGGLE SIDEBAR (Mobile) -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        ☰
+    </button>
+
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="main-layout">
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" onclick="showPage('characters')">
+                    + Nova Conversa
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <h4 class="section-title">Filtros</h4>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterConversations('all')">Todos</button>
+                    <button class="filter-tab" onclick="filterConversations('today')">Hoje</button>
+                    <button class="filter-tab" onclick="filterConversations('week')">Semana</button>
+                    <button class="filter-tab" onclick="filterConversations('favorites')">⭐</button>
+                </div>
+            </div>
+
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversas serão carregadas aqui -->
+            </div>
+        </div>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main-content" id="mainContent">
+            <!-- PÁGINA DE PERSONAGENS -->
+            <div id="charactersPage" class="characters-page page active">
+                <div class="page-header">
+                    <h1 class="page-title">Escolha seu Personagem</h1>
+                    <p class="page-subtitle">Converse com personagens únicos e inteligentes</p>
+                </div>
+                
+                <img src="" alt="" srcset="">
+
+                <div class="characters-grid" id="charactersGrid">
+                    <!-- Personagens serão carregados aqui -->
+                </div>
+            </div>
+
+            <!-- PÁGINA DE CHAT -->
+            <div id="chatPage" class="chat-page page" style="display: none;">
+                <div class="chat-header" id="chatHeader">
+                    <div class="chat-info">
+                        <div class="chat-avatar" id="chatAvatar">🌙</div>
+                        <div class="chat-details">
+                            <h3 id="chatCharacterName">Luna</h3>
+                            <p id="chatCharacterStatus">Online • Sábia e misteriosa</p>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <select id="chatModelSelector" class="model-selector">
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="claude-3.5">Claude 3.5</option>
+                            <option value="gemini-pro">Gemini Pro</option>
+                            <option value="local">Local Model</option>
+                            <option value="demo" selected>Demo</option>
+                        </select>
+                        <button class="action-btn" onclick="toggleFavorite()">⭐</button>
+                        <button class="action-btn" onclick="showCharacterInfo()">ℹ️</button>
+                        <button class="action-btn" onclick="clearCurrentChat()">🗑️</button>
+                    </div>
+                </div>
+
+                <div class="quick-replies" id="quickReplies">
+                    <!-- Quick replies aparecerão aqui -->
+                </div>
+
+                <div class="messages-area" id="messagesArea">
+                    <!-- Mensagens aparecerão aqui -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="message-avatar">🌙</div>
+                        <div class="typing-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-container">
+                        <textarea 
+                            id="messageInput" 
+                            class="message-input" 
+                            placeholder="Digite sua mensagem..."
+                            rows="1"
+                        ></textarea>
+                        <button id="sendBtn" class="send-btn" onclick="sendMessage()">
+                            ➤
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÕES -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Configurações</h3>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Provedor de IA:</label>
+                <select id="apiProvider" class="form-select">
+                    <option value="openai">OpenAI GPT-4</option>
+                    <option value="claude">Anthropic Claude</option>
+                    <option value="gemini">Google Gemini</option>
+                    <option value="local">Modelo Local</option>
+                    <option value="demo" selected>Demo (Simulado)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">API Key:</label>
+                <input type="password" id="apiKey" class="form-input" placeholder="Insira sua chave da API">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Temperatura (Criatividade): <span id="tempValue">0.7</span></label>
+                <input type="range" id="temperature" class="form-input" min="0" max="1" step="0.1" value="0.7">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Máximo de Tokens:</label>
+                <input type="number" id="maxTokens" class="form-input" value="1000" min="100" max="4000">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Tema:</label>
+                <select id="themeSelector" class="form-select">
+                    <option value="dark" selected>Escuro</option>
+                    <option value="light">Claro</option>
+                    <option value="auto">Automático</option>
+                </select>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="action-btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="action-btn btn-primary" onclick="saveSettings()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE INFO DO PERSONAGEM -->
+    <div id="characterInfoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="characterModalTitle">Informações do Personagem</h3>
+            </div>
+            <div id="characterModalContent">
+                <!-- Conteúdo será preenchido dinamicamente -->
+            </div>
+            <div class="modal-actions">
+                <button class="action-btn btn-secondary" onclick="closeModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/index.js"></script>
+</body>
+</html>

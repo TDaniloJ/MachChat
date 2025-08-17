@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos - ChatPersonas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(16, 16, 24, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #ff6b6b;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: #ff6b6b;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .coins {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #feca57;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+        .main-content {
+            padding: 80px 24px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+            margin-bottom: 32px;
+        }
+
+        /* TOGGLE DE PLANOS */
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #ff6b6b;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .discount-badge {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* GRID DE PLANOS */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(254, 202, 87, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .plan-card:hover::before {
+            opacity: 1;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .plan-card.popular {
+            border: 2px solid #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        .plan-card.popular::before {
+            opacity: 0.1;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 0 0 16px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .plan-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .plan-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .plan-name {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .plan-description {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .plan-price {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .price-amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ff6b6b;
+        }
+
+        .price-currency {
+            font-size: 24px;
+            vertical-align: top;
+        }
+
+        .price-period {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .price-original {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: line-through;
+            font-size: 16px;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #28a745;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .feature-icon.limited {
+            background: #ffc107;
+        }
+
+        .feature-icon.disabled {
+            background: #6c757d;
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .plan-button.primary {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .plan-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .plan-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .plan-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .plan-button.current {
+            background: #28a745;
+            color: white;
+            cursor: default;
+        }
+
+        /* FAQ */
+        .faq-section {
+            margin-top: 64px;
+        }
+
+        .faq-title {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 32px;
+            color: #ff6b6b;
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-icon {
+            font-size: 16px;
+            color: #ff6b6b;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 24px 20px;
+            max-height: 200px;
+        }
+
+        /* TESTIMONIALS */
+        .testimonials-section {
+            margin-top: 64px;
+            padding: 48px 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            margin: 64px -24px 0;
+        }
+
+        .testimonials-title {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 32px;
+            color: #ff6b6b;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 16px;
+        }
+
+        .testimonial-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #feca57;
+        }
+
+        .testimonial-role {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+
+        /* MODAL DE PAGAMENTO */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a24;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .payment-methods {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .payment-method {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .payment-icon {
+            font-size: 24px;
+        }
+
+        .payment-info h4 {
+            margin-bottom: 4px;
+        }
+
+        .payment-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .main-content {
+                padding: 80px 16px 24px;
+            }
+
+            .page-title {
+                font-size: 32px;
+            }
+
+            .page-subtitle {
+                font-size: 16px;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .plan-card.popular {
+                transform: none;
+            }
+
+            .testimonials-section {
+                margin: 64px -16px 0;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                padding: 0 16px;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+
+        /* ANIMAÇÕES */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .plan-card {
+            animation: fadeInUp 0.6s ease;
+            animation-fill-mode: both;
+        }
+
+        .plan-card:nth-child(1) { animation-delay: 0.1s; }
+        .plan-card:nth-child(2) { animation-delay: 0.2s; }
+        .plan-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .testimonial-card {
+            animation: slideInLeft 0.6s ease;
+            animation-fill-mode: both;
+        }
+
+        .testimonial-card:nth-child(2n) {
+            animation-name: slideInRight;
+        }
+
+        .faq-item {
+            animation: fadeInUp 0.4s ease;
+            animation-fill-mode: both;
+        }
+
+        .faq-item:nth-child(1) { animation-delay: 0.1s; }
+        .faq-item:nth-child(2) { animation-delay: 0.2s; }
+        .faq-item:nth-child(3) { animation-delay: 0.3s; }
+        .faq-item:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="chat.html" class="logo">
+                💬 ChatPersonas
+            </a>
+            <div class="nav-menu">
+                <a href="chat.html" class="nav-item">Personagens</a>
+                <a href="bonus.html" class="nav-item">Bônus</a>
+                <a href="planos.html" class="nav-item active">Planos</a>
+                <a href="perfil.html" class="nav-item">Perfil</a>
+            </div>
+        </div>
+        <div class="navbar-right">
+            <div class="user-info">
+                <div class="coins">
+                    🪙 <span id="userCoins">250</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Escolha Seu Plano</h1>
+            <p class="page-subtitle">Desbloqueie todo o potencial do ChatPersonas</p>
+            
+            <div class="billing-toggle">
+                <span class="toggle-label">Mensal</span>
+                <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+                    <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label">Anual</span>
+                <span class="discount-badge">Economize 25%</span>
+            </div>
+        </div>
+
+        <!-- PLANOS -->
+        <div class="plans-grid" id="plansGrid">
+            <!-- Os planos serão carregados aqui pelo JavaScript -->
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-section">
+            <h2 class="faq-title">Perguntas Frequentes</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Posso cancelar minha assinatura a qualquer momento?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Sim, você pode cancelar sua assinatura a qualquer momento através do seu perfil. O acesso continuará ativo até o final do período pago.
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Há diferença na qualidade dos personagens entre os planos?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Todos os planos têm acesso aos mesmos personagens de alta qualidade. A diferença está no número de conversas, recursos extras e modelos de IA disponíveis.
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Posso criar quantos personagens eu quiser no plano Premium?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        No plano Premium você pode criar até 10 personagens personalizados. No plano Pro, o limite é ilimitado.
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Como funciona o período de teste gratuito?</span>
+                        <span class="faq-icon">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Novos usuários ganham 7 dias de teste gratuito do plano Premium. Após esse período, você pode continuar com o plano escolhido ou retornar ao plano gratuito.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TESTIMONIAIS -->
+        <div class="testimonials-section">
+            <h2 class="testimonials-title">O que nossos usuários dizem</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">👩‍💻</div>
+                    <p class="testimonial-text">"O ChatPersonas revolucionou minha experiência com IA. Os personagens são incrivelmente realistas!"</p>
+                    <div class="testimonial-author">Maria Silva</div>
+                    <div class="testimonial-role">Desenvolvedora</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">👨‍🎨</div>
+                    <p class="testimonial-text">"Uso para brainstorming criativo. Cada personagem traz uma perspectiva única e inspiradora."</p>
+                    <div class="testimonial-author">João Santos</div>
+                    <div class="testimonial-role">Designer</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">👩‍🏫</div>
+                    <p class="testimonial-text">"Perfeito para ensino! Meus alunos adoram conversar com os personagens históricos."</p>
+                    <div class="testimonial-author">Ana Costa</div>
+                    <div class="testimonial-role">Professora</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PAGAMENTO -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalPlanName">Plano Premium</h3>
+                <p class="modal-subtitle">Escolha sua forma de pagamento</p>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method selected" data-method="card">
+                    <div class="payment-icon">💳</div>
+                    <div class="payment-info">
+                        <h4>Cartão de Crédito</h4>
+                        <p>Visa, Mastercard, American Express</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="pix">
+                    <div class="payment-icon">📱</div>
+                    <div class="payment-info">
+                        <h4>PIX</h4>
+                        <p>Pagamento instantâneo via PIX</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="paypal">
+                    <div class="payment-icon">🏦</div>
+                    <div class="payment-info">
+                        <h4>PayPal</h4>
+                        <p>Pague com sua conta PayPal</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="processPayment()">Continuar Pagamento</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS DOS PLANOS
+        const plansData = {
+            monthly: {
+                free: {
+                    name: 'Gratuito',
+                    icon: '🆓',
+                    description: 'Para começar a explorar',
+                    price: 0,
+                    originalPrice: null,
+                    features: [
+                        { text: '5 conversas por dia', available: true, limited: true },
+                        { text: 'Personagens básicos', available: true },
+                        { text: 'Suporte por email', available: true },
+                        { text: 'Histórico limitado', available: true, limited: true },
+                        { text: 'Criar personagens', available: false },
+                        { text: 'Modelos de IA avançados', available: false },
+                        { text: 'Suporte prioritário', available: false }
+                    ],
+                    popular: false,
+                    current: true
+                },
+                premium: {
+                    name: 'Premium',
+                    icon: '⭐',
+                    description: 'Ideal para uso regular',
+                    price: 29.90,
+                    originalPrice: null,
+                    features: [
+                        { text: 'Conversas ilimitadas', available: true },
+                        { text: 'Todos os personagens', available: true },
+                        { text: 'Criar até 10 personagens', available: true },
+                        { text: 'Histórico completo', available: true },
+                        { text: 'Modelos GPT-4', available: true },
+                        { text: 'Suporte prioritário', available: true },
+                        { text: 'Sem anúncios', available: true }
+                    ],
+                    popular: true,
+                    current: false
+                },
+                pro: {
+                    name: 'Pro',
+                    icon: '🚀',
+                    description: 'Para profissionais e entusiastas',
+                    price: 59.90,
+                    originalPrice: null,
+                    features: [
+                        { text: 'Todos os recursos Premium', available: true },
+                        { text: 'Personagens ilimitados', available: true },
+                        { text: 'Modelos de IA mais avançados', available: true },
+                        { text: 'API access', available: true },
+                        { text: 'Suporte 24/7', available: true },
+                        { text: 'Beta features', available: true },
+                        { text: 'Análises detalhadas', available: true }
+                    ],
+                    popular: false,
+                    current: false
+                }
+            },
+            yearly: {
+                free: {
+                    name: 'Gratuito',
+                    icon: '🆓',
+                    description: 'Para começar a explorar',
+                    price: 0,
+                    originalPrice: null,
+                    features: [
+                        { text: '5 conversas por dia', available: true, limited: true },
+                        { text: 'Personagens básicos', available: true },
+                        { text: 'Suporte por email', available: true },
+                        { text: 'Histórico limitado', available: true, limited: true },
+                        { text: 'Criar personagens', available: false },
+                        { text: 'Modelos de IA avançados', available: false },
+                        { text: 'Suporte prioritário', available: false }
+                    ],
+                    popular: false,
+                    current: true
+                },
+                premium: {
+                    name: 'Premium',
+                    icon: '⭐',
+                    description: 'Ideal para uso regular',
+                    price: 269.90,
+                    originalPrice: 358.80,
+                    features: [
+                        { text: 'Conversas ilimitadas', available: true },
+                        { text: 'Todos os personagens', available: true },
+                        { text: 'Criar até 10 personagens', available: true },
+                        { text: 'Histórico completo', available: true },
+                        { text: 'Modelos GPT-4', available: true },
+                        { text: 'Suporte prioritário', available: true },
+                        { text: 'Sem anúncios', available: true }
+                    ],
+                    popular: true,
+                    current: false
+                },
+                pro: {
+                    name: 'Pro',
+                    icon: '🚀',
+                    description: 'Para profissionais e entusiastas',
+                    price: 539.90,
+                    originalPrice: 718.80,
+                    features: [
+                        { text: 'Todos os recursos Premium', available: true },
+                        { text: 'Personagens ilimitados', available: true },
+                        { text: 'Modelos de IA mais avançados', available: true },
+                        { text: 'API access', available: true },
+                        { text: 'Suporte 24/7', available: true },
+                        { text: 'Beta features', available: true },
+                        { text: 'Análises detalhadas', available: true }
+                    ],
+                    popular: false,
+                    current: false
+                }
+            }
+        };
+
+        // ESTADO GLOBAL
+        let isYearly = false;
+        let selectedPlan = null;
+        let selectedPaymentMethod = 'card';
+        let userData = { coins: 250, plan: 'free' };
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            renderPlans();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Payment methods
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedPaymentMethod = this.dataset.method;
+                });
+            });
+
+            // Modal
+            document.getElementById('paymentModal').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            // Keyboard
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        }
+
+        function loadUserData() {
+            try {
+                const saved = localStorage.getItem('chatPersonas_userData');
+                if (saved) {
+                    userData = { ...userData, ...JSON.parse(saved) };
+                    document.getElementById('userCoins').textContent = userData.coins;
+                }
+            } catch (e) {
+                console.log('Usando dados padrão');
+            }
+        }
+
+        function saveUserData() {
+            try {
+                localStorage.setItem('chatPersonas_userData', JSON.stringify(userData));
+            } catch (e) {
+                console.log('Dados salvos em memória');
+            }
+        }
+
+        function toggleBilling() {
+            const toggle = document.getElementById('billingToggle');
+            isYearly = !isYearly;
+            
+            toggle.classList.toggle('active', isYearly);
+            renderPlans();
+        }
+
+        function renderPlans() {
+            const grid = document.getElementById('plansGrid');
+            const plans = isYearly ? plansData.yearly : plansData.monthly;
+            
+            grid.innerHTML = '';
+            
+            Object.entries(plans).forEach(([planId, plan]) => {
+                const card = createPlanCard(planId, plan);
+                grid.appendChild(card);
+            });
+        }
+
+        function createPlanCard(planId, plan) {
+            const card = document.createElement('div');
+            card.className = `plan-card ${plan.popular ? 'popular' : ''}`;
+            
+            const featuresHtml = plan.features.map(feature => {
+                let iconClass = 'feature-icon';
+                if (!feature.available) iconClass += ' disabled';
+                else if (feature.limited) iconClass += ' limited';
+                
+                const icon = feature.available ? '✓' : '✗';
+                
+                return `
+                    <li>
+                        <div class="${iconClass}">${icon}</div>
+                        ${feature.text}
+                    </li>
+                `;
+            }).join('');
+
+            const priceDisplay = plan.price === 0 
+                ? '<span class="price-amount">Gratuito</span>'
+                : `
+                    <span class="price-currency">R$</span>
+                    <span class="price-amount">${plan.price.toFixed(2).replace('.', ',')}</span>
+                    <span class="price-period">/${isYearly ? 'ano' : 'mês'}</span>
+                    ${plan.originalPrice ? `<span class="price-original">De R$ ${plan.originalPrice.toFixed(2).replace('.', ',')}</span>` : ''}
+                `;
+
+            let buttonText, buttonClass, buttonAction;
+            if (plan.current) {
+                buttonText = 'Plano Atual';
+                buttonClass = 'current';
+                buttonAction = '';
+            } else if (plan.price === 0) {
+                buttonText = 'Começar Grátis';
+                buttonClass = 'secondary';
+                buttonAction = `onclick="selectPlan('${planId}')"`;
+            } else {
+                buttonText = `Assinar ${plan.name}`;
+                buttonClass = 'primary';
+                buttonAction = `onclick="selectPlan('${planId}')"`;
+            }
+
+            card.innerHTML = `
+                ${plan.popular ? '<div class="popular-badge">Mais Popular</div>' : ''}
+                <div class="plan-content">
+                    <div class="plan-icon">${plan.icon}</div>
+                    <h3 class="plan-name">${plan.name}</h3>
+                    <p class="plan-description">${plan.description}</p>
+                    
+                    <div class="plan-price">${priceDisplay}</div>
+                    
+                    <ul class="plan-features">${featuresHtml}</ul>
+                    
+                    <button class="plan-button ${buttonClass}" ${buttonAction}>
+                        ${buttonText}
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function selectPlan(planId) {
+            const plans = isYearly ? plansData.yearly : plansData.monthly;
+            selectedPlan = { id: planId, ...plans[planId] };
+            
+            if (planId === 'free') {
+                // Processar diretamente para plano gratuito
+                userData.plan = 'free';
+                saveUserData();
+                showNotification('Plano alterado para Gratuito!', 'success');
+                setTimeout(() => window.location.href = 'chat.html', 2000);
+                return;
+            }
+            
+            // Abrir modal de pagamento para planos pagos
+            document.getElementById('modalPlanName').textContent = selectedPlan.name;
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        function processPayment() {
+            if (!selectedPlan) return;
+            
+            // Simular processamento de pagamento
+            showNotification('Processando pagamento...', 'info');
+            
+            setTimeout(() => {
+                // Atualizar dados do usuário
+                userData.plan = selectedPlan.id;
+                userData.coins += 100; // Bonus por assinatura
+                saveUserData();
+                
+                closeModal();
+                showNotification(`Parabéns! Você agora é ${selectedPlan.name}! +100 moedas de bônus`, 'success');
+                
+                // Atualizar display e redirecionar
+                setTimeout(() => {
+                    window.location.href = 'chat.html';
+                }, 3000);
+            }, 2000);
+        }
+
+        function toggleFaq(element) {
+            const faqItem = element.parentNode;
+            faqItem.classList.toggle('active');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 3000;
+                animation: slideInUp 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100px)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        console.log('💎 Página de Planos carregada com sucesso!');
+    </script>
+</body>
+</html>

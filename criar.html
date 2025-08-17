@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Personagem - ChatPersonas</title>
+
+    <link rel="stylesheet" href="css/criar.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="index.html" class="logo">
+                💬 ChatPersonas
+            </a>
+            <a href="index.html" class="back-btn">
+                ← Voltar
+            </a>
+        </div>
+        <div class="navbar-right">
+            <div class="user-info">
+                <div class="coins">
+                    🪙 <span id="userCoins">250</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Criar Personagem</h1>
+            <p class="page-subtitle">Dê vida a um personagem único com personalidade própria</p>
+        </div>
+
+        <form class="creation-form" id="characterForm">
+            <!-- INFORMAÇÕES BÁSICAS -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    ✨ Informações Básicas
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label" for="characterName">Nome do Personagem *</label>
+                    <input type="text" id="characterName" class="form-input" placeholder="Ex: Luna, Alex, Maya..." required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="characterDesc">Descrição Breve *</label>
+                    <input type="text" id="characterDesc" class="form-input" placeholder="Ex: Sábia e misteriosa, ama astronomia e filosofia" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Avatar *</label>
+                    <div class="avatar-selector" id="avatarSelector">
+                        <div class="avatar-option" data-avatar="🌙">🌙</div>
+                        <div class="avatar-option" data-avatar="⚡">⚡</div>
+                        <div class="avatar-option" data-avatar="🎨">🎨</div>
+                        <div class="avatar-option" data-avatar="🔬">🔬</div>
+                        <div class="avatar-option" data-avatar="🎭">🎭</div>
+                        <div class="avatar-option" data-avatar="🎮">🎮</div>
+                        <div class="avatar-option" data-avatar="📚">📚</div>
+                        <div class="avatar-option" data-avatar="🎵">🎵</div>
+                        <div class="avatar-option" data-avatar="🌟">🌟</div>
+                        <div class="avatar-option" data-avatar="🦋">🦋</div>
+                        <div class="avatar-option" data-avatar="🔥">🔥</div>
+                        <div class="avatar-option" data-avatar="❄️">❄️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERSONALIDADE -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    🧠 Personalidade
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Traços de Personalidade</label>
+                    <div class="tags-container" id="personalityTags">
+                        <div class="tag" data-trait="Sábia">Sábia</div>
+                        <div class="tag" data-trait="Misteriosa">Misteriosa</div>
+                        <div class="tag" data-trait="Corajosa">Corajosa</div>
+                        <div class="tag" data-trait="Criativa">Criativa</div>
+                        <div class="tag" data-trait="Enérgica">Enérgica</div>
+                        <div class="tag" data-trait="Analítica">Analítica</div>
+                        <div class="tag" data-trait="Empática">Empática</div>
+                        <div class="tag" data-trait="Aventureira">Aventureira</div>
+                        <div class="tag" data-trait="Contemplativa">Contemplativa</div>
+                        <div class="tag" data-trait="Inspiradora">Inspiradora</div>
+                        <input type="text" class="tag-input" placeholder="Adicionar..." id="customTraitInput">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Interesses e Hobbies</label>
+                    <div class="tags-container" id="interestsTags">
+                        <div class="tag" data-interest="Astronomia">Astronomia</div>
+                        <div class="tag" data-interest="Filosofia">Filosofia</div>
+                        <div class="tag" data-interest="Arte">Arte</div>
+                        <div class="tag" data-interest="Ciência">Ciência</div>
+                        <div class="tag" data-interest="Aventura">Aventura</div>
+                        <div class="tag" data-interest="Música">Música</div>
+                        <div class="tag" data-interest="Literatura">Literatura</div>
+                        <div class="tag" data-interest="Esportes">Esportes</div>
+                        <div class="tag" data-interest="Tecnologia">Tecnologia</div>
+                        <div class="tag" data-interest="Culinária">Culinária</div>
+                        <input type="text" class="tag-input" placeholder="Adicionar..." id="customInterestInput">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKGROUND -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    📖 História de Fundo
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label" for="characterBackground">Biografia do Personagem *</label>
+                    <textarea id="characterBackground" class="form-textarea" 
+                        placeholder="Conte a história do seu personagem. De onde vem? Quais suas experiências? O que o motiva? Esta informação ajudará a dar profundidade às conversas." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="systemPrompt">Prompt do Sistema</label>
+                    <textarea id="systemPrompt" class="form-textarea" 
+                        placeholder="Instruções específicas sobre como o personagem deve se comportar e falar. Será gerado automaticamente se deixado em branco."></textarea>
+                </div>
+            </div>
+
+            <!-- CONFIGURAÇÕES AVANÇADAS -->
+            <div class="form-section">
+                <button type="button" class="advanced-toggle" onclick="toggleAdvanced()">
+                    ⚙️ Configurações Avançadas <span id="advancedIcon">▼</span>
+                </button>
+                
+                <div class="advanced-settings" id="advancedSettings">
+                    <div class="form-group">
+                        <label class="form-label">Modelo de IA</label>
+                        <select id="aiModel" class="form-select">
+                            <option value="gpt-4">GPT-4 (Recomendado)</option>
+                            <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                            <option value="gemini-pro">Gemini Pro</option>
+                            <option value="local">Modelo Local</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Criatividade (Temperature)</label>
+                        <div class="slider-container">
+                            <span>Conservador</span>
+                            <input type="range" class="slider" id="temperature" min="0" max="1" step="0.1" value="0.7">
+                            <span>Criativo</span>
+                            <span class="slider-value" id="tempValue">0.7</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Máximo de Tokens</label>
+                        <div class="slider-container">
+                            <span>Curto</span>
+                            <input type="range" class="slider" id="maxTokens" min="100" max="4000" step="100" value="1000">
+                            <span>Longo</span>
+                            <span class="slider-value" id="tokensValue">1000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PREVIEW -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    👀 Preview
+                </h3>
+                <div class="character-preview" id="characterPreview">
+                    <div class="preview-avatar" id="previewAvatar">🎭</div>
+                    <div class="preview-name" id="previewName">Nome do Personagem</div>
+                    <div class="preview-desc" id="previewDesc">Descrição do personagem aparecerá aqui</div>
+                    <div class="preview-tags" id="previewTags">
+                        <!-- Tags selecionadas aparecerão aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- AÇÕES -->
+            <div class="form-actions">
+                <a href="chat.html" class="btn btn-secondary">
+                    ✕ Cancelar
+                </a>
+                <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">
+                    💾 Salvar Rascunho
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    ✨ Criar Personagem
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/criar.js"></script>
+</body>
+</html>
