@@ -3,61 +3,746 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatPersonas - IA Conversacional</title>
+    <title>ChatPersonas - Hub Central</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <link rel="stylesheet" href="css/index.css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(16, 16, 24, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #ff6b6b;
+            cursor: pointer;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .quick-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .quick-btn:hover {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: rgba(255, 107, 107, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .quick-btn.primary {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            border-color: transparent;
+            color: white;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .coins {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #feca57;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .level-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .main-layout {
+            display: flex;
+            padding-top: 60px;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 320px;
+            background: rgba(16, 16, 24, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: calc(100vh - 60px);
+            left: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .stat-mini {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .stat-mini-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+
+        .stat-mini-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .new-chat-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .new-chat-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .new-chat-btn:hover::before {
+            left: 100%;
+        }
+
+        .new-chat-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .sidebar-section {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tab.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .conversation-item {
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .conversation-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .conversation-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+        .main-content {
+            flex: 1;
+            margin-left: 320px;
+            padding: 24px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .quick-stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .quick-stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff6b6b;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        /* GRID DE PERSONAGENS */
+        .characters-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+
+        .view-all-btn {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .view-all-btn:hover {
+            color: #ff6b6b;
+        }
+
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .character-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(254, 202, 87, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .character-card:hover::before {
+            opacity: 1;
+        }
+
+        .character-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .character-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .character-name {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .character-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .character-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .char-stat {
+            text-align: center;
+        }
+
+        .char-stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+
+        .char-stat-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .chat-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .chat-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* MODAIS */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a24;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .creation-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .creation-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .creation-option:hover {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .option-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .option-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .quick-actions {
+                display: none;
+            }
+
+            .characters-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ANIMAÇÕES */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .character-card {
+            animation: slideInUp 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .character-card:nth-child(1) { animation-delay: 0.1s; }
+        .character-card:nth-child(2) { animation-delay: 0.2s; }
+        .character-card:nth-child(3) { animation-delay: 0.3s; }
+        .character-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
 </head>
 <body>
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-left">
-            <div class="logo" onclick="showPage('characters')">
+            <div class="logo">
                 💬 ChatPersonas
             </div>
-            <div class="nav-menu">
-                <a href="#" class="nav-item active" onclick="showPage('characters')">Personagens</a>
-                <a href="#" class="nav-item">Descobrir</a>
-                <a href="#" class="nav-item">Favoritos</a>
-                <a href="#" class="nav-item">Histórico</a>
-                <a href="criar.html" class="nav-item">Criar</a>
-                <a href="perfil.html" class="nav-item">Perfil</a>
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="showModal('start')">
+                    🚀 Iniciar
+                </button>
+                <button class="quick-btn primary" onclick="showModal('create')">
+                    ✨ Criar
+                </button>
+                <button class="quick-btn" onclick="showModal('plans')">
+                    💎 Planos
+                </button>
+                <button class="quick-btn" onclick="redirectToBonus()">
+                    🎁 Bônus
+                </button>
             </div>
         </div>
         <div class="navbar-right">
-            <select id="globalModelSelector" class="model-selector">
-                <option value="gpt-4">GPT-4</option>
-                <option value="claude-3.5">Claude 3.5</option>
-                <option value="gemini-pro">Gemini Pro</option>
-                <option value="local">Local Model</option>
-                <option value="demo" selected>Demo</option>
-            </select>
-            <div class="user-avatar" onclick="showModal('settings')">
-                ⚙️
+            <div class="user-info">
+                <div class="user-avatar" onclick="window.location.href='perfil.html'">
+                    👤
+                </div>
+                <div class="coins">
+                    🪙 <span id="userCoins">250</span>
+                </div>
+                <div class="level-badge">
+                    ⭐ Nível <span id="userLevel">1</span>
+                </div>
             </div>
         </div>
     </nav>
-
-    <!-- BOTÃO TOGGLE SIDEBAR (Mobile) -->
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
-        ☰
-    </button>
 
     <!-- LAYOUT PRINCIPAL -->
     <div class="main-layout">
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <button class="new-chat-btn" onclick="showPage('characters')">
+                <div class="sidebar-stats">
+                    <div class="stat-mini">
+                        <div class="stat-mini-value" id="totalChats">12</div>
+                        <div class="stat-mini-label">Chats</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-value" id="currentStreak">7</div>
+                        <div class="stat-mini-label">Streak</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-value" id="favCharacters">3</div>
+                        <div class="stat-mini-label">Favs</div>
+                    </div>
+                </div>
+                
+                <button class="new-chat-btn" onclick="showModal('create')">
                     + Nova Conversa
                 </button>
             </div>
 
             <div class="sidebar-section">
-                <h4 class="section-title">Filtros</h4>
+                <h4 class="section-title">Histórico</h4>
                 <div class="filter-tabs">
                     <button class="filter-tab active" onclick="filterConversations('all')">Todos</button>
                     <button class="filter-tab" onclick="filterConversations('today')">Hoje</button>
-                    <button class="filter-tab" onclick="filterConversations('week')">Semana</button>
                     <button class="filter-tab" onclick="filterConversations('favorites')">⭐</button>
                 </div>
             </div>
@@ -68,142 +753,594 @@
         </div>
 
         <!-- CONTEÚDO PRINCIPAL -->
-        <main class="main-content" id="mainContent">
-            <!-- PÁGINA DE PERSONAGENS -->
-            <div id="charactersPage" class="characters-page page active">
-                <div class="page-header">
-                    <h1 class="page-title">Escolha seu Personagem</h1>
-                    <p class="page-subtitle">Converse com personagens únicos e inteligentes</p>
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Hub Central</h1>
+                <p class="page-subtitle">Seu espaço para conversas inteligentes e criativas</p>
+                
+                <!-- STATS RÁPIDAS -->
+                <div class="quick-stats">
+                    <div class="quick-stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-number" id="totalConversations">24</div>
+                        <div class="stat-label">Conversas Hoje</div>
+                    </div>
+                    <div class="quick-stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-number" id="streakDays">7</div>
+                        <div class="stat-label">Dias Consecutivos</div>
+                    </div>
+                    <div class="quick-stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-number" id="achievements">8</div>
+                        <div class="stat-label">Conquistas</div>
+                    </div>
+                    <div class="quick-stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-number" id="currentLevel">1</div>
+                        <div class="stat-label">Nível Atual</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERSONAGENS -->
+            <section class="characters-section">
+                <div class="section-header">
+                    <h2>🎭 Personagens Disponíveis</h2>
+                    <a href="#" class="view-all-btn">Ver todos</a>
                 </div>
                 
-                <img src="" alt="" srcset="">
-
                 <div class="characters-grid" id="charactersGrid">
                     <!-- Personagens serão carregados aqui -->
                 </div>
-            </div>
-
-            <!-- PÁGINA DE CHAT -->
-            <div id="chatPage" class="chat-page page" style="display: none;">
-                <div class="chat-header" id="chatHeader">
-                    <div class="chat-info">
-                        <div class="chat-avatar" id="chatAvatar">🌙</div>
-                        <div class="chat-details">
-                            <h3 id="chatCharacterName">Luna</h3>
-                            <p id="chatCharacterStatus">Online • Sábia e misteriosa</p>
-                        </div>
-                    </div>
-                    <div class="chat-actions">
-                        <select id="chatModelSelector" class="model-selector">
-                            <option value="gpt-4">GPT-4</option>
-                            <option value="claude-3.5">Claude 3.5</option>
-                            <option value="gemini-pro">Gemini Pro</option>
-                            <option value="local">Local Model</option>
-                            <option value="demo" selected>Demo</option>
-                        </select>
-                        <button class="action-btn" onclick="toggleFavorite()">⭐</button>
-                        <button class="action-btn" onclick="showCharacterInfo()">ℹ️</button>
-                        <button class="action-btn" onclick="clearCurrentChat()">🗑️</button>
-                    </div>
-                </div>
-
-                <div class="quick-replies" id="quickReplies">
-                    <!-- Quick replies aparecerão aqui -->
-                </div>
-
-                <div class="messages-area" id="messagesArea">
-                    <!-- Mensagens aparecerão aqui -->
-                    <div class="typing-indicator" id="typingIndicator">
-                        <div class="message-avatar">🌙</div>
-                        <div class="typing-dots">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-area">
-                    <div class="input-container">
-                        <textarea 
-                            id="messageInput" 
-                            class="message-input" 
-                            placeholder="Digite sua mensagem..."
-                            rows="1"
-                        ></textarea>
-                        <button id="sendBtn" class="send-btn" onclick="sendMessage()">
-                            ➤
-                        </button>
-                    </div>
-                </div>
-            </div>
+            </section>
         </main>
     </div>
 
-    <!-- MODAL DE CONFIGURAÇÕES -->
-    <div id="settingsModal" class="modal">
+    <!-- MODAL INICIAR -->
+    <div id="startModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Configurações</h3>
+                <h3 class="modal-title">🚀 Como Começar</h3>
+                <p class="modal-subtitle">Primeiros passos no ChatPersonas</p>
             </div>
             
-            <div class="form-group">
-                <label class="form-label">Provedor de IA:</label>
-                <select id="apiProvider" class="form-select">
-                    <option value="openai">OpenAI GPT-4</option>
-                    <option value="claude">Anthropic Claude</option>
-                    <option value="gemini">Google Gemini</option>
-                    <option value="local">Modelo Local</option>
-                    <option value="demo" selected>Demo (Simulado)</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">API Key:</label>
-                <input type="password" id="apiKey" class="form-input" placeholder="Insira sua chave da API">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Temperatura (Criatividade): <span id="tempValue">0.7</span></label>
-                <input type="range" id="temperature" class="form-input" min="0" max="1" step="0.1" value="0.7">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Máximo de Tokens:</label>
-                <input type="number" id="maxTokens" class="form-input" value="1000" min="100" max="4000">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Tema:</label>
-                <select id="themeSelector" class="form-select">
-                    <option value="dark" selected>Escuro</option>
-                    <option value="light">Claro</option>
-                    <option value="auto">Automático</option>
-                </select>
+            <div class="creation-options">
+                <div class="creation-option" onclick="startTutorial()">
+                    <div class="option-icon">📚</div>
+                    <div class="option-title">Tutorial Interativo</div>
+                    <div class="option-desc">Aprenda a usar a plataforma em 5 minutos</div>
+                </div>
+                
+                <div class="creation-option" onclick="selectRandomCharacter()">
+                    <div class="option-icon">🎲</div>
+                    <div class="option-title">Conversa Aleatória</div>
+                    <div class="option-desc">Inicie uma conversa com um personagem surpresa</div>
+                </div>
+                
+                <div class="creation-option" onclick="showPopularCharacters()">
+                    <div class="option-icon">⭐</div>
+                    <div class="option-title">Personagens Populares</div>
+                    <div class="option-desc">Veja os personagens mais conversados</div>
+                </div>
             </div>
             
             <div class="modal-actions">
-                <button class="action-btn btn-secondary" onclick="closeModal()">Cancelar</button>
-                <button class="action-btn btn-primary" onclick="saveSettings()">Salvar</button>
+                <button class="btn-secondary" onclick="closeModal()">Fechar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE INFO DO PERSONAGEM -->
-    <div id="characterInfoModal" class="modal">
+    <!-- MODAL CRIAR -->
+    <div id="createModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="characterModalTitle">Informações do Personagem</h3>
+                <h3 class="modal-title">✨ Criar Novo</h3>
+                <p class="modal-subtitle">O que você gostaria de criar?</p>
             </div>
-            <div id="characterModalContent">
-                <!-- Conteúdo será preenchido dinamicamente -->
+            
+            <div class="creation-options">
+                <div class="creation-option" onclick="redirectToCreateCharacter()">
+                    <div class="option-icon">🎭</div>
+                    <div class="option-title">Criar Personagem</div>
+                    <div class="option-desc">Crie um personagem único com personalidade personalizada</div>
+                </div>
+                
+                <div class="creation-option" onclick="quickCreateCharacter()">
+                    <div class="option-icon">⚡</div>
+                    <div class="option-title">Criação Rápida</div>
+                    <div class="option-desc">Gere um personagem automaticamente</div>
+                </div>
+                
+                <div class="creation-option" onclick="importCharacter()">
+                    <div class="option-icon">📥</div>
+                    <div class="option-title">Importar Personagem</div>
+                    <div class="option-desc">Importe de JSON ou outro formato</div>
+                </div>
             </div>
+            
             <div class="modal-actions">
-                <button class="action-btn btn-secondary" onclick="closeModal()">Fechar</button>
+                <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <script src="js/index.js"></script>
+    <!-- MODAL PLANOS -->
+    <div id="plansModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">💎 Planos Premium</h3>
+                <p class="modal-subtitle">Desbloqueie todo o potencial do ChatPersonas</p>
+            </div>
+            
+            <div class="creation-options">
+                <div class="creation-option" onclick="selectPlan('basic')">
+                    <div class="option-icon">🌟</div>
+                    <div class="option-title">Básico - R$ 19/mês</div>
+                    <div class="option-desc">Conversas ilimitadas • 10 personagens personalizados</div>
+                </div>
+                
+                <div class="creation-option" onclick="selectPlan('pro')">
+                    <div class="option-icon">⚡</div>
+                    <div class="option-title">Pro - R$ 39/mês</div>
+                    <div class="option-desc">Tudo do Básico • Modelos premium • API acesso</div>
+                </div>
+                
+                <div class="creation-option" onclick="selectPlan('enterprise')">
+                    <div class="option-icon">🏢</div>
+                    <div class="option-title">Enterprise - Customizado</div>
+                    <div class="option-desc">Soluções personalizadas para empresas</div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+                <button class="btn-primary" onclick="redirectToPlans()">Ver Detalhes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS DOS PERSONAGENS
+        const characters = {
+            luna: {
+                name: "Luna",
+                desc: "Sábia e misteriosa, ama astronomia e filosofia",
+                avatar: "🌙",
+                status: "Online",
+                stats: {
+                    rating: 4.9,
+                    chats: "1.2k",
+                    level: 1
+                }
+            },
+            alex: {
+                name: "Alex",
+                desc: "Aventureiro corajoso, sempre pronto para novas jornadas",
+                avatar: "⚡",
+                status: "Online",
+                stats: {
+                    rating: 4.8,
+                    chats: "890",
+                    level: 1
+                }
+            },
+            maya: {
+                name: "Maya",
+                desc: "Artista criativa, vê beleza em tudo ao seu redor",
+                avatar: "🎨",
+                status: "Online",
+                stats: {
+                    rating: 4.9,
+                    chats: "756",
+                    level: 1
+                }
+            },
+            zara: {
+                name: "Zara",
+                desc: "Cientista brilhante, fascinada pelos mistérios do universo",
+                avatar: "🔬",
+                status: "Online",
+                stats: {
+                    rating: 4.7,
+                    chats: "634",
+                    level: 1
+                }
+            }
+        };
+
+        // ESTADO GLOBAL
+        let userData = {
+            name: "Usuário",
+            coins: 250,
+            level: 1,
+            totalChats: 12,
+            currentStreak: 7,
+            favCharacters: 3,
+            achievements: 8
+        };
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadCharacters();
+            loadConversationsList();
+            setupEventListeners();
+            updateStats();
+        });
+
+        function setupEventListeners() {
+            // Fechar modal clicando fora
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeModal();
+                    }
+                });
+            });
+
+            // Atalhos de teclado
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+                
+                // Atalhos rápidos
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case '1':
+                            e.preventDefault();
+                            showModal('start');
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            showModal('create');
+                            break;
+                        case '3':
+                            e.preventDefault();
+                            showModal('plans');
+                            break;
+                        case 'b':
+                            e.preventDefault();
+                            redirectToBonus();
+                            break;
+                    }
+                }
+            });
+        }
+
+        // GERENCIAMENTO DE PERSONAGENS
+        function loadCharacters() {
+            const grid = document.getElementById('charactersGrid');
+            grid.innerHTML = '';
+
+            Object.entries(characters).forEach(([id, character]) => {
+                const card = createCharacterCard(id, character);
+                grid.appendChild(card);
+            });
+        }
+
+        function createCharacterCard(id, character) {
+            const card = document.createElement('div');
+            card.className = `character-card`;
+            card.onclick = () => startChatWithCharacter(id);
+
+            card.innerHTML = `
+                <div class="card-content">
+                    <div class="character-avatar">${character.avatar}</div>
+                    <h3 class="character-name">${character.name}</h3>
+                    <p class="character-desc">${character.desc}</p>
+                    
+                    <div class="character-stats">
+                        <div class="char-stat">
+                            <div class="char-stat-value">${character.stats.rating}</div>
+                            <div class="char-stat-label">Rating</div>
+                        </div>
+                        <div class="char-stat">
+                            <div class="char-stat-value">${character.stats.chats}</div>
+                            <div class="char-stat-label">Chats</div>
+                        </div>
+                        <div class="char-stat">
+                            <div class="char-stat-value">Nv.${character.stats.level}</div>
+                            <div class="char-stat-label">Nível</div>
+                        </div>
+                    </div>
+                    
+                    <button class="chat-btn">💬 Conversar</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function startChatWithCharacter(characterId) {
+            // Salvar o personagem selecionado
+            sessionStorage.setItem('selectedCharacter', characterId);
+            
+            // Redirecionar para o chat
+            window.location.href = `chat.html?character=${characterId}`;
+        }
+
+        // SISTEMA DE MODAIS
+        function showModal(modalType) {
+            closeModal(); // Fechar outros modais primeiro
+            
+            const modalId = modalType + 'Modal';
+            const modal = document.getElementById(modalId);
+            
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.body.style.overflow = 'auto';
+        }
+
+        // AÇÕES DOS MODAIS
+        
+        // MODAL INICIAR
+        function startTutorial() {
+            closeModal();
+            showNotification('Tutorial iniciado! Bem-vindo ao ChatPersonas 🚀', 'success');
+            // Implementar tutorial interativo
+        }
+
+        function selectRandomCharacter() {
+            const characterIds = Object.keys(characters);
+            const randomId = characterIds[Math.floor(Math.random() * characterIds.length)];
+            closeModal();
+            startChatWithCharacter(randomId);
+        }
+
+        function showPopularCharacters() {
+            closeModal();
+            // Filtrar por personagens populares
+            showNotification('Mostrando personagens populares ⭐', 'info');
+        }
+
+        // MODAL CRIAR
+        function redirectToCreateCharacter() {
+            window.location.href = 'criar.html';
+        }
+
+        function quickCreateCharacter() {
+            closeModal();
+            showNotification('Criando personagem automaticamente... ⚡', 'info');
+            
+            // Simular criação rápida
+            setTimeout(() => {
+                showNotification('Personagem criado com sucesso! 🎭', 'success');
+                // Adicionar novo personagem à lista
+            }, 2000);
+        }
+
+        function importCharacter() {
+            closeModal();
+            // Implementar importação
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    showNotification('Importando personagem... 📥', 'info');
+                    // Processar arquivo
+                }
+            };
+            input.click();
+        }
+
+        // MODAL PLANOS
+        function selectPlan(planType) {
+            closeModal();
+            showNotification(`Plano ${planType} selecionado! Redirecionando... 💎`, 'info');
+            setTimeout(() => {
+                redirectToPlans();
+            }, 1500);
+        }
+
+        function redirectToPlans() {
+            window.location.href = 'planos.html';
+        }
+
+        // NAVEGAÇÃO
+        function redirectToBonus() {
+            window.location.href = 'bonus.html';
+        }
+
+        // GERENCIAMENTO DE CONVERSAS
+        function loadConversationsList() {
+            const list = document.getElementById('conversationsList');
+            list.innerHTML = '';
+
+            // Conversas de exemplo
+            const exampleConversations = [
+                {
+                    id: 'conv_1',
+                    characterName: 'Luna',
+                    characterAvatar: '🌙',
+                    preview: 'As estrelas sussurram segredos...',
+                    time: '2h',
+                    active: false
+                },
+                {
+                    id: 'conv_2',
+                    characterName: 'Alex',
+                    characterAvatar: '⚡',
+                    preview: 'Que aventura épica vamos viver hoje?',
+                    time: '1d',
+                    active: false
+                },
+                {
+                    id: 'conv_3',
+                    characterName: 'Maya',
+                    characterAvatar: '🎨',
+                    preview: 'Que cores suas emoções estão pintando?',
+                    time: '3d',
+                    active: false
+                },
+                {
+                    id: 'conv_4',
+                    characterName: 'Zara',
+                    characterAvatar: '🔬',
+                    preview: 'Descobri algo fascinante sobre...',
+                    time: '5d',
+                    active: false
+                }
+            ];
+
+            exampleConversations.forEach(conv => {
+                const item = createConversationItem(conv);
+                list.appendChild(item);
+            });
+        }
+
+        function createConversationItem(conversation) {
+            const item = document.createElement('div');
+            item.className = `conversation-item`;
+            
+            item.innerHTML = `
+                <div class="conversation-avatar">${conversation.characterAvatar}</div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 14px; font-weight: 500; margin-bottom: 2px;">
+                        ${conversation.characterName}
+                    </div>
+                    <div style="font-size: 12px; color: rgba(255, 255, 255, 0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        ${conversation.preview}
+                    </div>
+                </div>
+                <div style="font-size: 11px; color: rgba(255, 255, 255, 0.4);">
+                    ${conversation.time}
+                </div>
+            `;
+
+            item.onclick = () => loadConversation(conversation.id);
+            return item;
+        }
+
+        function loadConversation(conversationId) {
+            // Redirecionar para a página de conversa específica
+            window.location.href = `chat.html?conv=${conversationId}`;
+        }
+
+        function filterConversations(filter) {
+            // Atualizar botões ativos
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Implementar filtros
+            showNotification(`Filtrando por: ${filter}`, 'info');
+        }
+
+        // GERENCIAMENTO DE USUÁRIO
+        function loadUserData() {
+            try {
+                const saved = localStorage.getItem('chatPersonas_userData');
+                if (saved) {
+                    userData = { ...userData, ...JSON.parse(saved) };
+                }
+            } catch (e) {
+                console.log('Usando dados de usuário padrão');
+            }
+            updateUserDisplay();
+        }
+
+        function updateUserDisplay() {
+            document.getElementById('userCoins').textContent = userData.coins;
+            document.getElementById('userLevel').textContent = userData.level;
+        }
+
+        function updateStats() {
+            document.getElementById('totalChats').textContent = userData.totalChats;
+            document.getElementById('currentStreak').textContent = userData.currentStreak;
+            document.getElementById('favCharacters').textContent = userData.favCharacters;
+            document.getElementById('totalConversations').textContent = userData.totalChats * 2;
+            document.getElementById('streakDays').textContent = userData.currentStreak;
+            document.getElementById('achievements').textContent = userData.achievements;
+            document.getElementById('currentLevel').textContent = userData.level;
+        }
+
+        function saveUserData() {
+            try {
+                localStorage.setItem('chatPersonas_userData', JSON.stringify(userData));
+            } catch (e) {
+                console.log('Dados do usuário salvos em memória');
+            }
+        }
+
+        // SISTEMA DE NOTIFICAÇÕES
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 3000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                max-width: 300px;
+                word-wrap: break-word;
+                font-size: 14px;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100px)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Adicionar animação slideInRight
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // TUTORIAL E DICAS
+        function showTips() {
+            console.log('💡 Dicas do ChatPersonas:');
+            console.log('   Ctrl+1: Modal Iniciar');
+            console.log('   Ctrl+2: Modal Criar');
+            console.log('   Ctrl+3: Modal Planos');
+            console.log('   Ctrl+B: Página de Bônus');
+            console.log('   ESC: Fechar modal');
+        }
+
+        // FUNCIONALIDADES DEMO
+        setTimeout(() => {
+            showTips();
+            showNotification('Hub Central carregado! Use os atalhos para navegação rápida 🚀', 'success');
+        }, 1000);
+
+        console.log('🎯 ChatPersonas Hub Central carregado com sucesso!');
+    </script>
 </body>
 </html>

@@ -725,11 +725,11 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-left">
-            <a href="chat.html" class="logo">
+            <a href="index.html" class="logo">
                 💬 ChatPersonas
             </a>
             <div class="nav-menu">
-                <a href="chat.html" class="nav-item">Personagens</a>
+                <a href="index.html" class="nav-item">Personagens</a>
                 <a href="bonus.html" class="nav-item">Bônus</a>
                 <a href="planos.html" class="nav-item active">Planos</a>
                 <a href="perfil.html" class="nav-item">Perfil</a>
@@ -1139,11 +1139,11 @@
             selectedPlan = { id: planId, ...plans[planId] };
             
             if (planId === 'free') {
-                // Processar diretamente para plano gratuito
+                // Processar diretamente para plano gratuito// do plano gratuito
                 userData.plan = 'free';
                 saveUserData();
                 showNotification('Plano alterado para Gratuito!', 'success');
-                setTimeout(() => window.location.href = 'chat.html', 2000);
+                setTimeout(() => window.location.href = 'index.html', 2000);
                 return;
             }
             
@@ -1173,7 +1173,7 @@
                 
                 // Atualizar display e redirecionar
                 setTimeout(() => {
-                    window.location.href = 'chat.html';
+                    window.location.href = 'index.html';
                 }, 3000);
             }, 2000);
         }
