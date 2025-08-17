@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,6 +32,7 @@
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
+            z-index: 100;
         }
 
         .header-left {
@@ -117,6 +119,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
         .action-btn:hover {
@@ -129,6 +132,129 @@
             background: rgba(255, 193, 7, 0.2);
             border-color: rgba(255, 193, 7, 0.4);
             color: #ffc107;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR DE CONVERSAS */
+        .conversations-sidebar {
+            width: 280px;
+            background: rgba(16, 16, 24, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .conversations-sidebar.hidden {
+            transform: translateX(-100%);
+            position: absolute;
+            height: 100%;
+            z-index: 200;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #ff6b6b;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .conversation-item {
+            padding: 12px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .conversation-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .conversation-item.active {
+            background: rgba(255, 107, 107, 0.2);
+            border-left: 3px solid #ff6b6b;
+        }
+
+        .conv-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .conv-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conv-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .conv-preview {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conv-time {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            flex-shrink: 0;
+        }
+
+        /* ÁREA PRINCIPAL DE CHAT */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         /* ÁREA DE MENSAGENS */
@@ -231,9 +357,17 @@
             animation: typingDots 1.4s infinite;
         }
 
-        .dot:nth-child(1) { animation-delay: 0s; }
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
+        .dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         /* QUICK REPLIES */
         .quick-replies {
@@ -358,7 +492,114 @@
             transform: none;
         }
 
-        /* MODAL INFO DO PERSONAGEM */
+        /* SIDEBAR DE AÇÕES */
+        .actions-sidebar {
+            width: 320px;
+            background: rgba(16, 16, 24, 0.8);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .actions-sidebar.hidden {
+            transform: translateX(100%);
+            position: absolute;
+            right: 0;
+            height: 100%;
+            z-index: 200;
+        }
+
+        .actions-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .actions-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+
+        .close-sidebar-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .actions-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .action-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-item:hover {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 107, 107, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .action-info {
+            flex: 1;
+        }
+
+        .action-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .action-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* MODAIS */
         .modal {
             position: fixed;
             top: 0;
@@ -370,7 +611,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
+            z-index: 3000;
         }
 
         .modal.active {
@@ -382,7 +623,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 16px;
             padding: 24px;
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -395,22 +636,10 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .modal-character-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #ff6b6b, #feca57);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 16px;
-        }
-
         .modal-title {
             font-size: 20px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
         .modal-subtitle {
@@ -418,27 +647,71 @@
             font-size: 14px;
         }
 
-        .character-details-grid {
-            display: grid;
-            gap: 16px;
+        .form-group {
+            margin-bottom: 16px;
         }
 
-        .detail-item {
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: #ff6b6b;
+        }
+
+        .model-option {
             background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .detail-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 6px;
-            text-transform: uppercase;
+        .model-option:hover {
+            border-color: rgba(255, 107, 107, 0.3);
         }
 
-        .detail-value {
+        .model-option.selected {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .model-name {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .model-price {
+            font-size: 12px;
+            color: #feca57;
+        }
+
+        .model-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .modal-actions {
@@ -450,61 +723,94 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
         .btn-secondary {
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.8);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            font-size: 14px;
         }
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.2);
         }
 
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* TOGGLE BUTTONS */
+        .sidebar-toggle {
+            position: fixed;
+            top: 70px;
+            left: 10px;
+            z-index: 300;
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+            color: white;
+            padding: 8px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .actions-toggle {
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            z-index: 300;
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+            color: white;
+            padding: 8px;
+            cursor: pointer;
+            display: none;
+        }
+
         /* RESPONSIVO */
+        @media (max-width: 1024px) {
+            .actions-sidebar {
+                transform: translateX(100%);
+            }
+
+            .actions-toggle {
+                display: block;
+            }
+        }
+
         @media (max-width: 768px) {
-            .chat-header {
-                padding: 12px 16px;
+            .conversations-sidebar {
+                transform: translateX(-100%);
             }
 
-            .header-left {
-                gap: 12px;
+            .sidebar-toggle {
+                display: block;
             }
 
-            .character-info {
-                gap: 8px;
+            .chat-main {
+                width: 100%;
             }
 
-            .character-details h3 {
-                font-size: 14px;
+            .header-actions {
+                gap: 4px;
             }
 
-            .character-status {
-                font-size: 11px;
-            }
-
-            .messages-area {
-                padding: 16px;
-            }
-
-            .message {
-                max-width: 90%;
-            }
-
-            .quick-replies {
-                padding: 0 16px 8px;
-            }
-
-            .input-area {
-                padding: 12px 16px;
-            }
-
-            .back-btn {
-                padding: 6px 8px;
+            .action-btn {
+                width: 32px;
+                height: 32px;
                 font-size: 12px;
             }
         }
@@ -515,6 +821,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -522,57 +829,57 @@
         }
 
         @keyframes typingDots {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-10px);
+            }
         }
 
-        /* SCROLLBAR PERSONALIZADA */
+        /* SCROLLBAR */
+        .conversations-list::-webkit-scrollbar,
+        .actions-content::-webkit-scrollbar,
         .messages-area::-webkit-scrollbar {
             width: 6px;
         }
 
+        .conversations-list::-webkit-scrollbar-track,
+        .actions-content::-webkit-scrollbar-track,
         .messages-area::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 3px;
         }
 
+        .conversations-list::-webkit-scrollbar-thumb,
+        .actions-content::-webkit-scrollbar-thumb,
         .messages-area::-webkit-scrollbar-thumb {
             background: rgba(255, 107, 107, 0.3);
             border-radius: 3px;
         }
 
+        .conversations-list::-webkit-scrollbar-thumb:hover,
+        .actions-content::-webkit-scrollbar-thumb:hover,
         .messages-area::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 107, 107, 0.5);
         }
-
-        /* ESTADOS ESPECIAIS */
-        .welcome-message {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .welcome-message .character-avatar {
-            width: 80px;
-            height: 80px;
-            font-size: 32px;
-            margin: 0 auto 16px;
-        }
-
-        .welcome-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #ff6b6b;
-        }
-
-        .welcome-subtitle {
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
+
 <body>
+    <!-- TOGGLE BUTTONS -->
+    <button class="sidebar-toggle" onclick="toggleConversationsSidebar()">
+        💬
+    </button>
+
+    <button class="actions-toggle" onclick="toggleActionsSidebar()">
+        ⚙️
+    </button>
+
     <!-- HEADER DO CHAT -->
     <header class="chat-header">
         <div class="header-left">
@@ -590,243 +897,331 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="header-actions">
             <button class="action-btn favorite" id="favoriteBtn" onclick="toggleFavorite()" title="Favoritar">
                 ⭐
             </button>
-            <button class="action-btn" onclick="showCharacterInfo()" title="Informações">
-                ℹ️
+            <button class="action-btn" onclick="showCharacterDetails()" title="Ver Detalhes">
+                👁️
+            </button>
+            <button class="action-btn" onclick="editCharacter()" title="Editar Personagem">
+                ✏️
+            </button>
+            <button class="action-btn" onclick="showChatSettings()" title="Configurar Chat">
+                ⚙️
+            </button>
+            <button class="action-btn" onclick="saveMemory()" title="Salvar Memória">
+                💾
             </button>
             <button class="action-btn" onclick="clearCurrentChat()" title="Limpar Chat">
                 🗑️
             </button>
-            <button class="action-btn" onclick="shareChat()" title="Compartilhar">
-                📤
-            </button>
         </div>
     </header>
 
-    <!-- ÁREA DE MENSAGENS -->
-    <div class="messages-container">
-        <div class="messages-area" id="messagesArea">
-            <!-- Mensagem de boas-vindas -->
-            <div class="welcome-message" id="welcomeMessage">
-                <div class="character-avatar" id="welcomeAvatar">🌙</div>
-                <h3 class="welcome-title" id="welcomeTitle">Olá! Eu sou Luna</h3>
-                <p class="welcome-subtitle" id="welcomeSubtitle">
-                    Sou sábia e misteriosa, amo astronomia e filosofia. Como posso ajudar você hoje?
-                </p>
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="main-layout">
+        <!-- SIDEBAR DE CONVERSAS -->
+        <div class="conversations-sidebar" id="conversationsSidebar">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">💬 Conversas</h3>
+                <input type="text" class="search-input" placeholder="Buscar conversas..." id="searchInput">
             </div>
 
-            <!-- Indicador de digitação -->
-            <div class="typing-indicator" id="typingIndicator">
-                <div class="message-avatar" id="typingAvatar">🌙</div>
-                <div class="typing-dots">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversas serão carregadas aqui -->
+            </div>
+        </div>
+
+        <!-- ÁREA PRINCIPAL DE CHAT -->
+        <div class="chat-main">
+            <!-- ÁREA DE MENSAGENS -->
+            <div class="messages-container">
+                <div class="messages-area" id="messagesArea">
+                    <!-- Mensagem de boas-vindas -->
+                    <div class="welcome-message" id="welcomeMessage"
+                        style="text-align: center; padding: 40px 20px; color: rgba(255, 255, 255, 0.6);">
+                        <div class="character-avatar" id="welcomeAvatar"
+                            style="width: 80px; height: 80px; font-size: 32px; margin: 0 auto 16px;">🌙</div>
+                        <h3 class="welcome-title" id="welcomeTitle"
+                            style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #ff6b6b;">Olá! Eu sou
+                            Luna</h3>
+                        <p class="welcome-subtitle" id="welcomeSubtitle" style="font-size: 14px; margin-bottom: 20px;">
+                            Sou sábia e misteriosa, amo astronomia e filosofia. Como posso ajudar você hoje?
+                        </p>
+                    </div>
+
+                    <!-- Indicador de digitação -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="message-avatar" id="typingAvatar">🌙</div>
+                        <div class="typing-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK REPLIES -->
+                <div class="quick-replies" id="quickReplies">
+                    <div class="quick-reply" onclick="sendQuickReply('Olá! Como você está?')">👋 Cumprimentar</div>
+                    <div class="quick-reply" onclick="sendQuickReply('Fale sobre as estrelas')">✨ Astronomia</div>
+                    <div class="quick-reply" onclick="sendQuickReply('Qual o sentido da vida?')">🤔 Filosofia</div>
+                    <div class="quick-reply" onclick="sendQuickReply('Conte uma história')">📚 História</div>
+                </div>
+            </div>
+
+            <!-- ÁREA DE INPUT -->
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea id="messageInput" class="message-input" placeholder="Digite sua mensagem..."
+                        rows="1"></textarea>
+                    <div class="input-actions">
+                        <button class="input-btn" onclick="attachFile()" title="Anexar arquivo">
+                            📎
+                        </button>
+                        <button class="input-btn" onclick="toggleVoiceInput()" title="Entrada de voz">
+                            🎤
+                        </button>
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Enviar mensagem">
+                            ➤
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- QUICK REPLIES -->
-        <div class="quick-replies" id="quickReplies">
-            <div class="quick-reply" onclick="sendQuickReply('Olá! Como você está?')">👋 Cumprimentar</div>
-            <div class="quick-reply" onclick="sendQuickReply('Fale sobre as estrelas')">✨ Astronomia</div>
-            <div class="quick-reply" onclick="sendQuickReply('Qual o sentido da vida?')">🤔 Filosofia</div>
-            <div class="quick-reply" onclick="sendQuickReply('Conte uma história')">📚 História</div>
-        </div>
-    </div>
+        <!-- SIDEBAR DE AÇÕES -->
+        <div class="actions-sidebar" id="actionsSidebar">
+            <div class="actions-header">
+                <h3 class="actions-title">⚙️ Ações</h3>
+                <button class="close-sidebar-btn" onclick="toggleActionsSidebar()">✕</button>
+            </div>
 
-    <!-- ÁREA DE INPUT -->
-    <div class="input-area">
-        <div class="input-container">
-            <textarea 
-                id="messageInput" 
-                class="message-input" 
-                placeholder="Digite sua mensagem..."
-                rows="1"
-            ></textarea>
-            <div class="input-actions">
-                <button class="input-btn" onclick="attachFile()" title="Anexar arquivo">
-                    📎
-                </button>
-                <button class="input-btn" onclick="toggleVoiceInput()" title="Entrada de voz">
-                    🎤
-                </button>
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Enviar mensagem">
-                    ➤
-                </button>
+            <div class="actions-content">
+                <!-- AÇÕES DO PERSONAGEM -->
+                <div class="action-section">
+                    <h4 class="section-title">Personagem</h4>
+
+                    <div class="action-item" onclick="showCharacterDetails()">
+                        <div class="action-icon">👁️</div>
+                        <div class="action-info">
+                            <div class="action-name">Ver Detalhes</div>
+                            <div class="action-desc">Página completa com informações</div>
+                        </div>
+                    </div>
+
+                    <div class="action-item" onclick="editCharacter()">
+                        <div class="action-icon">✏️</div>
+                        <div class="action-info">
+                            <div class="action-name">Editar Personagem</div>
+                            <div class="action-desc">Modificar personalidade e comportamento</div>
+                        </div>
+                    </div>
+
+                    <div class="action-item" onclick="duplicateCharacter()">
+                        <div class="action-icon">📋</div>
+                        <div class="action-info">
+                            <div class="action-name">Duplicar</div>
+                            <div class="action-desc">Criar uma cópia para modificar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONFIGURAÇÕES DE CHAT -->
+                <div class="action-section">
+                    <h4 class="section-title">Chat</h4>
+
+                    <div class="action-item" onclick="showChatSettings()">
+                        <div class="action-icon">⚙️</div>
+                        <div class="action-info">
+                            <div class="action-name">Configurar Chat</div>
+                            <div class="action-desc">Modelo, temperatura, tokens</div>
+                        </div>
+                    </div>
+
+                    <div class="action-item" onclick="createCustomModel()">
+                        <div class="action-icon">🧠</div>
+                        <div class="action-info">
+                            <div class="action-name">Criar Modelo</div>
+                            <div class="action-desc">Modelo personalizado com prompt</div>
+                        </div>
+                    </div>
+
+                    <div class="action-item" onclick="saveMemory()">
+                        <div class="action-icon">💾</div>
+                        <div class="action-info">
+                            <div class="action-name">Salvar Memória</div>
+                            <div class="action-desc">Preservar histórico da conversa</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AÇÕES DE CONVERSA -->
+                <div class="action-section">
+                    <h4 class="section-title">Conversa</h4>
+
+                    <div class="action-item" onclick="exportChat()">
+                        <div class="action-icon">📤</div>
+                        <div class="action-info">
+                            <div class="action-name">Exportar Chat</div>
+                            <div class="action-desc">Salvar como TXT, JSON ou PDF</div>
+                        </div>
+                    </div>
+
+                    <div class="action-item" onclick="shareChat()">
+                        <div class="action-icon">🔗</div>
+                        <div class="action-info">
+                            <div class="action-name">Compartilhar</div>
+                            <div class="action-desc">Link público da conversa</div>
+                        </div>
+                    </div>
+
+                    <div class="action-item" onclick="clearCurrentChat()">
+                        <div class="action-icon">🗑️</div>
+                        <div class="action-info">
+                            <div class="action-name">Limpar Chat</div>
+                            <div class="action-desc">Remover todas as mensagens</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL INFORMAÇÕES DO PERSONAGEM -->
-    <div id="characterInfoModal" class="modal">
+    <!-- MODAL CONFIGURAÇÕES DE CHAT -->
+    <div id="chatSettingsModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">⚙️ Configurações de Chat</h3>
+                <p class="modal-subtitle">Personalize a experiência de conversa</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Modelo de IA</label>
+                <div id="modelsContainer">
+                    <!-- Modelos serão carregados aqui -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Temperatura (Criatividade): <span id="tempValue">0.7</span></label>
+                <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7"
+                    oninput="document.getElementById('tempValue').textContent = this.value" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Máximo de Tokens: <span id="tokensValue">1000</span></label>
+                <input type="range" id="maxTokens" min="100" max="4000" step="100" value="1000"
+                    oninput="document.getElementById('tokensValue').textContent = this.value" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Contexto da Conversa</label>
+                <select id="contextMode" class="form-select">
+                    <option value="full">Contexto Completo (mais tokens)</option>
+                    <option value="recent">Apenas Mensagens Recentes</option>
+                    <option value="summary">Resumo + Mensagens Recentes</option>
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveChatSettings()">Aplicar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAR MODELO CUSTOMIZADO -->
+    <div id="customModelModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">🧠 Criar Modelo Customizado</h3>
+                <p class="modal-subtitle">Configure um modelo de IA personalizado</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Nome do Modelo</label>
+                <input type="text" id="modelName" class="form-input" placeholder="Ex: Modelo Criativo Luna">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Modelo Base</label>
+                <select id="baseModel" class="form-select">
+                    <option value="gpt-4">GPT-4 (OpenAI)</option>
+                    <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                    <option value="gemini-pro">Gemini Pro</option>
+                    <option value="local">Modelo Local</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Prompt do Sistema</label>
+                <textarea id="systemPrompt" class="form-input" rows="4"
+                    placeholder="Instruções específicas sobre como o modelo deve se comportar..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Introdução</label>
+                <textarea id="modelIntro" class="form-input" rows="2"
+                    placeholder="Mensagem inicial que o modelo irá enviar..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Custo por Mensagem</label>
+                <select id="modelCost" class="form-select">
+                    <option value="free">Gratuito</option>
+                    <option value="5">5 moedas por mensagem</option>
+                    <option value="10">10 moedas por mensagem</option>
+                    <option value="premium">Apenas Premium</option>
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveCustomModel()">Criar Modelo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SALVAR MEMÓRIA -->
+    <div id="saveMemoryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-character-avatar" id="modalCharacterAvatar">🌙</div>
-                <h3 class="modal-title" id="modalCharacterName">Luna</h3>
-                <p class="modal-subtitle" id="modalCharacterDesc">Sábia e misteriosa</p>
+                <h3 class="modal-title">💾 Salvar Memória</h3>
+                <p class="modal-subtitle">Preservar o histórico desta conversa</p>
             </div>
-            
-            <div class="character-details-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Personalidade</div>
-                    <div class="detail-value" id="characterPersonality">Sábia, Misteriosa, Contemplativa</div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Interesses</div>
-                    <div class="detail-value" id="characterInterests">Astronomia, Filosofia, Poesia, Meditação</div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Background</div>
-                    <div class="detail-value" id="characterBackground">Luna cresceu observando as estrelas desde criança...</div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Estatísticas</div>
-                    <div class="detail-value" id="characterStats">Rating: 4.9 • Chats: 1.2k • Nível: 1</div>
-                </div>
+
+            <div class="form-group">
+                <label class="form-label">Nome da Memória</label>
+                <input type="text" id="memoryName" class="form-input"
+                    placeholder="Ex: Conversa sobre astronomia com Luna">
             </div>
-            
+
+            <div class="form-group">
+                <label class="form-label">Descrição (opcional)</label>
+                <textarea id="memoryDesc" class="form-input" rows="3"
+                    placeholder="Breve descrição do que foi conversado..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Tipo de Memória</label>
+                <select id="memoryType" class="form-select">
+                    <option value="full">Conversa Completa</option>
+                    <option value="summary">Apenas Resumo</option>
+                    <option value="important">Pontos Importantes</option>
+                </select>
+            </div>
+
             <div class="modal-actions">
-                <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmSaveMemory()">Salvar</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // DADOS DOS PERSONAGENS
-        const characters = {
-            luna: {
-                name: "Luna",
-                desc: "Sábia e misteriosa, ama astronomia e filosofia",
-                avatar: "🌙",
-                personality: ["Sábia", "Misteriosa", "Contemplativa"],
-                interests: ["Astronomia", "Filosofia", "Poesia", "Meditação"],
-                background: "Luna cresceu observando as estrelas desde criança. Formou-se em Filosofia e Astrofísica, e agora dedica sua vida a explorar os mistérios do universo e da mente humana.",
-                stats: { rating: 4.9, chats: "1.2k", level: 1 },
-                quickReplies: ["👋 Cumprimentar", "✨ Astronomia", "🤔 Filosofia", "📚 História"],
-                responses: {
-                    "Olá! Como você está?": "Olá! Estou contemplando as estrelas esta noite. Elas sempre me inspiram a refletir sobre nossa existência. E você, como tem passado?",
-                    "Fale sobre as estrelas": "Ah, as estrelas! Elas são como faróis cósmicos que nos guiam através da escuridão da ignorância. Cada uma conta uma história de bilhões de anos... Qual aspecto da astronomia mais desperta sua curiosidade?",
-                    "Qual o sentido da vida?": "Uma pergunta eterna que ecoa através dos séculos... Acredito que o sentido da vida não é algo que encontramos, mas algo que criamos através de nossas experiências, relacionamentos e da busca constante por compreensão. O que você pensa sobre isso?",
-                    "Conte uma história": "Era uma vez uma jovem que passava noites inteiras observando as estrelas. Ela acreditava que cada constelação era um mapa para diferentes dimensões da sabedoria. Uma noite, enquanto contemplava Órion, percebeu que as respostas que buscava não estavam nas estrelas, mas na jornada de olhar para elas..."
-                }
-            },
-            alex: {
-                name: "Alex",
-                desc: "Aventureiro corajoso, sempre pronto para novas jornadas",
-                avatar: "⚡",
-                personality: ["Corajoso", "Aventureiro", "Energético"],
-                interests: ["Aventura", "Esportes", "Viagens", "Desafios"],
-                background: "Alex é um explorador nato que já visitou mais de 50 países. Escalou montanhas, mergulhou em oceanos profundos e sempre busca a próxima grande aventura.",
-                stats: { rating: 4.8, chats: "890", level: 1 },
-                quickReplies: ["🏔️ Aventuras", "🌍 Viagens", "💪 Desafios", "⚡ Energia"],
-                responses: {
-                    "Olá! Como você está?": "Ei! Estou cheio de energia e pronto para qualquer aventura! Acabei de planejar uma expedição incrível. Você topa embarcar comigo nessa jornada?",
-                    "Conte sobre suas aventuras": "Cara, onde eu começo? Já escalei o Everest, mergulhei com tubarões brancos, atravessei o Sahara... Cada aventura é uma lição de vida! Qual tipo de aventura mais te emociona?"
-                }
-            },
-            maya: {
-                name: "Maya",
-                desc: "Artista criativa, vê beleza em tudo ao seu redor",
-                avatar: "🎨",
-                personality: ["Criativa", "Sensível", "Inspiradora"],
-                interests: ["Arte", "Pintura", "Música", "Poesia"],
-                background: "Maya é uma artista multi-disciplinar que encontra inspiração em cada momento da vida. Suas obras já foram expostas em galerias ao redor do mundo.",
-                stats: { rating: 4.9, chats: "756", level: 1 },
-                quickReplies: ["🎨 Arte", "🎵 Música", "💫 Inspiração", "🌈 Cores"],
-                responses: {
-                    "Olá! Como você está?": "Olá, querido! Estou pintando um pôr do sol magnífico... As cores estão dançando na tela como se tivessem vida própria. Como estão as cores da sua alma hoje?"
-                }
-            },
-            zara: {
-                name: "Zara",
-                desc: "Cientista brilhante, fascinada pelos mistérios do universo",
-                avatar: "🔬",
-                personality: ["Analítica", "Curiosa", "Inteligente"],
-                interests: ["Ciência", "Pesquisa", "Tecnologia", "Descobertas"],
-                background: "Dra. Zara é uma renomada cientista com PhD em Física Quântica e Biologia Molecular. Sua paixão é desvendar os segredos mais profundos do universo.",
-                stats: { rating: 4.7, chats: "634", level: 1 },
-                quickReplies: ["🔬 Ciência", "🧬 Pesquisa", "🚀 Tecnologia", "🔍 Descobertas"],
-                responses: {
-                    "Olá! Como você está?": "Olá! Estou analisando dados fascinantes sobre mecânica quântica. A natureza da realidade é ainda mais estranha do que imaginamos! Você tem interesse em ciência?"
-                }
-            }
-        };
+    <script src="js/chat.js"></script>
+</body>
 
-        // ESTADO GLOBAL
-        let currentCharacter = null;
-        let messageHistory = [];
-        let isFavorite = false;
-        let isTyping = false;
-
-        // INICIALIZAÇÃO
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCharacterFromURL();
-            setupEventListeners();
-            setupAutoResize();
-        });
-
-        function setupEventListeners() {
-            const messageInput = document.getElementById('messageInput');
-            const sendBtn = document.getElementById('sendBtn');
-
-            // Enter para enviar (Shift+Enter para nova linha)
-            messageInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    if (messageInput.value.trim()) {
-                        sendMessage();
-                    }
-                }
-            });
-
-            // Atualizar estado do botão enviar
-            messageInput.addEventListener('input', function() {
-                sendBtn.disabled = !messageInput.value.trim();
-                updateSendButtonState();
-            });
-
-            // Fechar modal clicando fora
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeModal();
-                    }
-                });
-            });
-
-            // Atalhos de teclado
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
-            });
-        }
-
-        function setupAutoResize() {
-            const textarea = document.getElementById('messageInput');
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-            });
-        }
-
-        // GERENCIAMENTO DE PERSONAGEM
-        function loadCharacterFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const characterId = urlParams.get('character') || sessionStorage.getItem('selectedCharacter') || 'luna';
-
-            if (characters.hasOwnProperty(characterId)) {
-                currentCharacter = characters[characterId];
-                updateCharacterInfo();
-            } else {
-                console.error('Personagem desconhecido');
-            }
-        }
+</html>
