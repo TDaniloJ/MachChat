@@ -330,6 +330,10 @@ function loadConversation(conversationId) {
     window.location.href = `chat.html?conv=${conversationId}`;
 }
 
+function redirectToChat() {
+    window.location.href = 'search.html';
+}
+
 function filterConversations(filter) {
     // Atualizar botões ativos
     document.querySelectorAll('.filter-tab').forEach(tab => {
